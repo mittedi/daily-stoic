@@ -3,10 +3,912 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#0f0f0f">
     <title>Daily Stack</title>
+    <style>
+        /* ===== RESET & BASE ===== */
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --bg: #0f0f0f;
+            --bg-card: #1a1a1a;
+            --bg-input: #252525;
+            --border: #333;
+            --text: #d4d0c8;
+            --text-muted: #7a7568;
+            --amber: #c8a45c;
+            --amber-dim: #8a7340;
+            --green: #5c8a5c;
+            --green-dim: #3a5a3a;
+            --red-dim: #5a3a3a;
+            --serif: "Georgia", "Times New Roman", serif;
+            --mono: "SF Mono", "Menlo", "Consolas", monospace;
+            --sans: -apple-system, "Helvetica Neue", sans-serif;
+            --radius: 8px;
+        }
+
+        html { font-size: 16px; }
+
+        body {
+            font-family: var(--sans);
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100dvh;
+            display: flex;
+            flex-direction: column;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* ===== NAV ===== */
+        nav {
+            display: flex;
+            border-bottom: 1px solid var(--border);
+            background: var(--bg);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        nav button {
+            flex: 1;
+            padding: 14px 8px;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-family: var(--mono);
+            font-size: 0.75rem;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: color 0.2s, border-color 0.2s;
+        }
+
+        nav button.active {
+            color: var(--amber);
+            border-bottom-color: var(--amber);
+        }
+
+        /* ===== MAIN CONTENT ===== */
+        main {
+            flex: 1;
+            padding: 24px 16px 100px;
+            max-width: 480px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .view { display: none; }
+        .view.active { display: block; }
+
+        /* ===== MORNING VIEW ===== */
+        .quote-block {
+            margin: 32px 0;
+            padding: 24px 20px;
+            border-left: 3px solid var(--amber-dim);
+            background: var(--bg-card);
+            border-radius: 0 var(--radius) var(--radius) 0;
+        }
+
+        .quote-text {
+            font-family: var(--serif);
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: var(--text);
+            font-style: italic;
+        }
+
+        .quote-author {
+            margin-top: 12px;
+            font-family: var(--mono);
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .section-label {
+            font-family: var(--mono);
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 8px;
+        }
+
+        .focus-input {
+            width: 100%;
+            padding: 14px 16px;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            color: var(--text);
+            font-family: var(--sans);
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .focus-input:focus {
+            border-color: var(--amber-dim);
+        }
+
+        .focus-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .date-label {
+            font-family: var(--mono);
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-align: center;
+            margin-bottom: 8px;
+            letter-spacing: 0.05em;
+        }
+
+        /* ===== EVENING VIEW ===== */
+        .habits-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .habit-item {
+            display: flex;
+            align-items: center;
+            padding: 14px 16px;
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: background 0.15s;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        .habit-item:active {
+            background: var(--bg-input);
+        }
+
+        .habit-check {
+            width: 22px;
+            height: 22px;
+            border: 2px solid var(--border);
+            border-radius: 4px;
+            margin-right: 14px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.15s, border-color 0.15s;
+        }
+
+        .habit-item.done .habit-check {
+            background: var(--green);
+            border-color: var(--green);
+        }
+
+        .habit-item.done .habit-check::after {
+            content: "✓";
+            color: #fff;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .habit-name {
+            font-size: 0.95rem;
+            color: var(--text);
+        }
+
+        .habit-item.done .habit-name {
+            color: var(--text-muted);
+        }
+
+        .habit-meta {
+            margin-left: auto;
+            font-family: var(--mono);
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            white-space: nowrap;
+        }
+
+        .weekly-progress {
+            display: flex;
+            gap: 3px;
+            margin-left: auto;
+        }
+
+        .weekly-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--border);
+        }
+
+        .weekly-dot.filled {
+            background: var(--green);
+        }
+
+        textarea.reflection-input {
+            width: 100%;
+            padding: 14px 16px;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            color: var(--text);
+            font-family: var(--sans);
+            font-size: 0.95rem;
+            outline: none;
+            resize: vertical;
+            min-height: 80px;
+            transition: border-color 0.2s;
+        }
+
+        textarea.reflection-input:focus {
+            border-color: var(--amber-dim);
+        }
+
+        textarea.reflection-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .section-gap { margin-top: 32px; }
+
+        /* ===== DASHBOARD ===== */
+        .streaks-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .streak-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+            background: var(--bg-card);
+            border-radius: var(--radius);
+        }
+
+        .streak-name {
+            font-size: 0.85rem;
+            color: var(--text);
+            flex: 1;
+        }
+
+        .streak-count {
+            font-family: var(--mono);
+            font-size: 0.85rem;
+            color: var(--amber);
+            min-width: 60px;
+            text-align: right;
+        }
+
+        .streak-bar {
+            width: 40px;
+            height: 6px;
+            background: var(--border);
+            border-radius: 3px;
+            margin-left: 12px;
+            overflow: hidden;
+        }
+
+        .streak-bar-fill {
+            height: 100%;
+            background: var(--amber);
+            border-radius: 3px;
+            transition: width 0.3s;
+        }
+
+        .heatmap-container { margin-top: 32px; }
+
+        .heatmap-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 3px;
+            margin-top: 8px;
+        }
+
+        .heatmap-day-label {
+            font-family: var(--mono);
+            font-size: 0.6rem;
+            color: var(--text-muted);
+            text-align: center;
+            padding-bottom: 4px;
+        }
+
+        .heatmap-cell {
+            aspect-ratio: 1;
+            border-radius: 3px;
+            background: var(--bg-input);
+            position: relative;
+        }
+
+        .heatmap-cell.level-1 { background: var(--green-dim); }
+        .heatmap-cell.level-2 { background: var(--green); }
+        .heatmap-cell.level-3 { background: #6aaa6a; }
+        .heatmap-cell.future { background: var(--bg); border: 1px solid var(--border); opacity: 0.3; }
+
+        .heatmap-cell .cell-date {
+            position: absolute;
+            bottom: 2px;
+            right: 3px;
+            font-family: var(--mono);
+            font-size: 0.5rem;
+            color: var(--text-muted);
+            opacity: 0.5;
+        }
+
+        .heatmap-legend {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 4px;
+            margin-top: 8px;
+            font-family: var(--mono);
+            font-size: 0.6rem;
+            color: var(--text-muted);
+        }
+
+        .legend-cell {
+            width: 12px;
+            height: 12px;
+            border-radius: 2px;
+        }
+
+        /* ===== UTILITIES ===== */
+        .saved-indicator {
+            font-family: var(--mono);
+            font-size: 0.65rem;
+            color: var(--green);
+            opacity: 0;
+            transition: opacity 0.3s;
+            margin-top: 4px;
+        }
+
+        .saved-indicator.show { opacity: 1; }
+
+        .summary-card {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .summary-stat {
+            flex: 1;
+            text-align: center;
+            padding: 16px 8px;
+            background: var(--bg-card);
+            border-radius: var(--radius);
+        }
+
+        .summary-stat .stat-value {
+            font-family: var(--mono);
+            font-size: 1.5rem;
+            color: var(--amber);
+        }
+
+        .summary-stat .stat-label {
+            font-family: var(--mono);
+            font-size: 0.6rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-top: 4px;
+        }
+    </style>
 </head>
 <body>
-    <h1>Daily Stack</h1>
-    <p>Coming soon.</p>
+
+<nav>
+    <button id="nav-morning" onclick="showView('morning')">Morgen</button>
+    <button id="nav-evening" onclick="showView('evening')">Aften</button>
+    <button id="nav-dashboard" onclick="showView('dashboard')">Dashboard</button>
+</nav>
+
+<main>
+    <!-- ===== MORNING VIEW ===== -->
+    <div id="view-morning" class="view">
+        <p class="date-label" id="morning-date"></p>
+
+        <div class="quote-block">
+            <p class="quote-text" id="quote-text"></p>
+            <p class="quote-author" id="quote-author"></p>
+        </div>
+
+        <div class="section-gap">
+            <p class="section-label">Hvad er mit fokus i dag?</p>
+            <input
+                type="text"
+                class="focus-input"
+                id="focus-input"
+                placeholder="Skriv dit fokus..."
+                autocomplete="off"
+            >
+            <p class="saved-indicator" id="focus-saved">Gemt</p>
+        </div>
+    </div>
+
+    <!-- ===== EVENING VIEW ===== -->
+    <div id="view-evening" class="view">
+        <p class="date-label" id="evening-date"></p>
+
+        <p class="section-label">Dagens vaner</p>
+        <ul class="habits-list" id="habits-list"></ul>
+
+        <div class="section-gap">
+            <p class="section-label">Hvad gik godt i dag?</p>
+            <textarea
+                class="reflection-input"
+                id="reflection-input"
+                placeholder="Skriv din refleksion..."
+            ></textarea>
+            <p class="saved-indicator" id="reflection-saved">Gemt</p>
+        </div>
+    </div>
+
+    <!-- ===== DASHBOARD VIEW ===== -->
+    <div id="view-dashboard" class="view">
+        <p class="date-label" id="dash-date"></p>
+
+        <div class="summary-card" id="summary-card"></div>
+
+        <p class="section-label">Streaks</p>
+        <div class="streaks-grid" id="streaks-grid"></div>
+
+        <div class="heatmap-container">
+            <p class="section-label">Sidste 4 uger</p>
+            <div class="heatmap-grid" id="heatmap-grid"></div>
+            <div class="heatmap-legend">
+                <span>Mindre</span>
+                <div class="legend-cell" style="background: var(--bg-input)"></div>
+                <div class="legend-cell" style="background: var(--green-dim)"></div>
+                <div class="legend-cell" style="background: var(--green)"></div>
+                <div class="legend-cell" style="background: #6aaa6a"></div>
+                <span>Mere</span>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script>
+// ===== CONFIG =====
+const HABITS = [
+    { id: "walk",       name: "Gå dagligt",             type: "daily" },
+    { id: "run",        name: "Løb",                    type: "weekly", goal: 3 },
+    { id: "strength",   name: "Styrketræning",          type: "weekly", goal: 3 },
+    { id: "eggs",       name: "2 æg",                   type: "daily" },
+    { id: "sauerkraut", name: "Surkål",                 type: "daily" },
+    { id: "no_sugar",   name: "Ingen sukker",           type: "daily" },
+    { id: "meditation", name: "Meditation 15 min",      type: "daily" },
+    { id: "bed_early",  name: "I seng 20:00–20:30",     type: "daily" },
+];
+
+const QUOTES = [
+    { text: "Du har magt over dit sind, ikke over ydre begivenheder. Erkend dette og du vil finde styrke.", author: "Marcus Aurelius" },
+    { text: "Mist ikke tid på det du ikke kan kontrollere. Fokuser på det du kan.", author: "Epiktet" },
+    { text: "Vi lider mere i forestillingen end i virkeligheden.", author: "Seneca" },
+    { text: "Lev hver dag som om det kunne være dit sidste — og en dag vil du have ret.", author: "Marcus Aurelius" },
+    { text: "Fremgang, ikke perfektion.", author: "Stoisk princip" },
+    { text: "Negativt visualisér: hvad ville du miste, hvis du mistede det du har nu?", author: "Irvine" },
+    { text: "Det er ikke tingene der forstyrrer os, men vores mening om tingene.", author: "Epiktet" },
+    { text: "Hvad er det værste der kan ske? Og kan du overleve det?", author: "Irvine" },
+    { text: "Øv frivillig ubehag. Vælg det svære i dag.", author: "Stoisk princip" },
+    { text: "Din karakter er summen af dine valg.", author: "Epiktet" },
+    { text: "Memento mori: du er dødelig. Hvad betyder det for din dag?", author: "Stoisk princip" },
+    { text: "Sammenlign dig ikke med andre. Sammenlign dig kun med dig fra i går.", author: "Stoisk princip" },
+    { text: "Hvad er under din kontrol i dag? Fokuser kun på det.", author: "Epiktet" },
+    { text: "Enkelthed er styrke. Fjern alt der ikke tjener dit formål.", author: "Stoisk princip" },
+];
+
+// ===== DATE HELPERS =====
+function todayStr() {
+    return localDateStr(new Date());
+}
+
+function formatDateDanish(dateStr) {
+    const d = new Date(dateStr + "T12:00:00");
+    const days = ["søndag", "mandag", "tirsdag", "onsdag", "torsdag", "fredag", "lørdag"];
+    const months = ["januar", "februar", "marts", "april", "maj", "juni",
+                    "juli", "august", "september", "oktober", "november", "december"];
+    return `${days[d.getDay()]} ${d.getDate()}. ${months[d.getMonth()]} ${d.getFullYear()}`;
+}
+
+function daysBetween(a, b) {
+    const msPerDay = 86400000;
+    return Math.round((new Date(b + "T12:00:00") - new Date(a + "T12:00:00")) / msPerDay);
+}
+
+function localDateStr(d) {
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+}
+
+function addDays(dateStr, n) {
+    const d = new Date(dateStr + "T12:00:00");
+    d.setDate(d.getDate() + n);
+    return localDateStr(d);
+}
+
+function getWeekStart(dateStr) {
+    const d = new Date(dateStr + "T12:00:00");
+    const day = d.getDay();
+    const diff = day === 0 ? 6 : day - 1; // Monday = start of week
+    d.setDate(d.getDate() - diff);
+    return localDateStr(d);
+}
+
+// ===== STORAGE =====
+function storageKey(dateStr, suffix) {
+    return `ds_${dateStr}_${suffix}`;
+}
+
+function getHabits(dateStr) {
+    const raw = localStorage.getItem(storageKey(dateStr, "habits"));
+    if (!raw) return {};
+    try { return JSON.parse(raw); }
+    catch { return {}; }
+}
+
+function safePut(key, value) {
+    try { localStorage.setItem(key, value); }
+    catch { console.warn("localStorage quota exceeded"); }
+}
+
+function setHabits(dateStr, habits) {
+    safePut(storageKey(dateStr, "habits"), JSON.stringify(habits));
+}
+
+function getFocus(dateStr) {
+    return localStorage.getItem(storageKey(dateStr, "focus")) || "";
+}
+
+function setFocus(dateStr, text) {
+    safePut(storageKey(dateStr, "focus"), text);
+}
+
+function getReflection(dateStr) {
+    return localStorage.getItem(storageKey(dateStr, "reflection")) || "";
+}
+
+function setReflection(dateStr, text) {
+    safePut(storageKey(dateStr, "reflection"), text);
+}
+
+// ===== STREAK CALCULATION =====
+function calculateStreak(habitId, habit) {
+    const today = todayStr();
+
+    if (habit.type === "weekly") {
+        return calculateWeeklyStreak(habitId, habit);
+    }
+
+    let streak = 0;
+    let checkDate = today;
+
+    // Check if today is done; if not, start from yesterday
+    const todayData = getHabits(checkDate);
+    if (!todayData[habitId]) {
+        checkDate = addDays(today, -1);
+    }
+
+    while (true) {
+        const data = getHabits(checkDate);
+        if (data[habitId]) {
+            streak++;
+            checkDate = addDays(checkDate, -1);
+        } else {
+            break;
+        }
+        if (streak > 365) break; // Safety limit
+    }
+
+    return streak;
+}
+
+function calculateWeeklyStreak(habitId, habit) {
+    const today = todayStr();
+    const currentWeekStart = getWeekStart(today);
+    let streak = 0;
+    let weekStart = currentWeekStart;
+
+    // Check current week first — if goal not yet met and week isn't over, start from previous week
+    const currentWeekCount = countWeeklyCompletions(habitId, weekStart);
+    if (currentWeekCount < habit.goal) {
+        weekStart = addDays(weekStart, -7);
+    }
+
+    while (true) {
+        const count = countWeeklyCompletions(habitId, weekStart);
+        if (count >= habit.goal) {
+            streak++;
+            weekStart = addDays(weekStart, -7);
+        } else {
+            break;
+        }
+        if (streak > 52) break; // Safety limit
+    }
+
+    return streak;
+}
+
+function countWeeklyCompletions(habitId, weekStart) {
+    let count = 0;
+    for (let i = 0; i < 7; i++) {
+        const dateStr = addDays(weekStart, i);
+        const data = getHabits(dateStr);
+        if (data[habitId]) count++;
+    }
+    return count;
+}
+
+// ===== QUOTE OF THE DAY =====
+function getQuoteOfDay() {
+    // Deterministic: based on days since epoch
+    const epoch = new Date("2026-01-01T12:00:00");
+    const now = new Date();
+    const daysSinceEpoch = Math.floor((now - epoch) / 86400000);
+    const index = ((daysSinceEpoch % QUOTES.length) + QUOTES.length) % QUOTES.length;
+    return QUOTES[index];
+}
+
+// ===== VIEW MANAGEMENT =====
+let currentView = "morning";
+
+function showView(view) {
+    currentView = view;
+    document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
+    document.querySelectorAll("nav button").forEach(b => b.classList.remove("active"));
+    document.getElementById(`view-${view}`).classList.add("active");
+    document.getElementById(`nav-${view}`).classList.add("active");
+
+    if (view === "morning") renderMorning();
+    if (view === "evening") renderEvening();
+    if (view === "dashboard") renderDashboard();
+}
+
+function autoDetectView() {
+    const hour = new Date().getHours();
+    if (hour < 12) return "morning";
+    if (hour >= 17) return "evening";
+    return "morning"; // Default to morning between 12-17
+}
+
+// ===== RENDER: MORNING =====
+function renderMorning() {
+    const today = todayStr();
+    document.getElementById("morning-date").textContent = formatDateDanish(today);
+
+    const quote = getQuoteOfDay();
+    document.getElementById("quote-text").textContent = `\u201C${quote.text}\u201D`;
+    document.getElementById("quote-author").textContent = `— ${quote.author}`;
+
+    const focusInput = document.getElementById("focus-input");
+    focusInput.value = getFocus(today);
+}
+
+// ===== RENDER: EVENING =====
+function renderEvening() {
+    const today = todayStr();
+    document.getElementById("evening-date").textContent = formatDateDanish(today);
+
+    const habitsList = document.getElementById("habits-list");
+    habitsList.innerHTML = "";
+
+    const habitsData = getHabits(today);
+
+    HABITS.forEach(habit => {
+        const li = document.createElement("li");
+        li.className = "habit-item" + (habitsData[habit.id] ? " done" : "");
+        li.onclick = () => toggleHabit(habit.id);
+
+        const checkDiv = document.createElement("div");
+        checkDiv.className = "habit-check";
+        li.appendChild(checkDiv);
+
+        const nameSpan = document.createElement("span");
+        nameSpan.className = "habit-name";
+        nameSpan.textContent = habit.name;
+        li.appendChild(nameSpan);
+
+        if (habit.type === "weekly") {
+            const weekStart = getWeekStart(today);
+            const weekCount = countWeeklyCompletions(habit.id, weekStart);
+            const progressDiv = document.createElement("div");
+            progressDiv.className = "weekly-progress";
+            for (let i = 0; i < habit.goal; i++) {
+                const dot = document.createElement("div");
+                dot.className = "weekly-dot" + (i < weekCount ? " filled" : "");
+                progressDiv.appendChild(dot);
+            }
+            li.appendChild(progressDiv);
+        }
+
+        habitsList.appendChild(li);
+    });
+
+    const reflectionInput = document.getElementById("reflection-input");
+    reflectionInput.value = getReflection(today);
+}
+
+function toggleHabit(habitId) {
+    const today = todayStr();
+    const data = getHabits(today);
+    if (data[habitId]) { delete data[habitId]; } else { data[habitId] = true; }
+    setHabits(today, data);
+    renderEvening();
+}
+
+// ===== RENDER: DASHBOARD =====
+function renderDashboard() {
+    const today = todayStr();
+    document.getElementById("dash-date").textContent = formatDateDanish(today);
+
+    // Summary card
+    const summaryCard = document.getElementById("summary-card");
+    const todayData = getHabits(today);
+    const todayDone = HABITS.filter(h => todayData[h.id]).length;
+    const longestStreak = Math.max(...HABITS.map(h => calculateStreak(h.id, h)), 0);
+    const totalDays = countTotalActiveDays();
+
+    summaryCard.textContent = "";
+    const stats = [
+        { value: `${todayDone}/${HABITS.length}`, label: "I dag" },
+        { value: `${longestStreak}`, label: "Bedste streak" },
+        { value: `${totalDays}`, label: "Sidste 90 dage" },
+    ];
+    stats.forEach(s => {
+        const div = document.createElement("div");
+        div.className = "summary-stat";
+        const val = document.createElement("div");
+        val.className = "stat-value";
+        val.textContent = s.value;
+        const lbl = document.createElement("div");
+        lbl.className = "stat-label";
+        lbl.textContent = s.label;
+        div.appendChild(val);
+        div.appendChild(lbl);
+        summaryCard.appendChild(div);
+    });
+
+    // Streaks grid
+    const streaksGrid = document.getElementById("streaks-grid");
+    streaksGrid.innerHTML = "";
+    const maxStreak = Math.max(...HABITS.map(h => calculateStreak(h.id, h)), 1);
+
+    HABITS.forEach(habit => {
+        const streak = calculateStreak(habit.id, habit);
+        const pct = Math.min((streak / Math.max(maxStreak, 7)) * 100, 100);
+        const unit = habit.type === "weekly" ? (streak === 1 ? "uge" : "uger") : (streak === 1 ? "dag" : "dage");
+
+        const row = document.createElement("div");
+        row.className = "streak-row";
+
+        const nameEl = document.createElement("span");
+        nameEl.className = "streak-name";
+        nameEl.textContent = habit.name;
+        row.appendChild(nameEl);
+
+        const countEl = document.createElement("span");
+        countEl.className = "streak-count";
+        countEl.textContent = `${streak} ${unit}`;
+        row.appendChild(countEl);
+
+        const barEl = document.createElement("div");
+        barEl.className = "streak-bar";
+        const fillEl = document.createElement("div");
+        fillEl.className = "streak-bar-fill";
+        fillEl.style.width = `${pct}%`;
+        barEl.appendChild(fillEl);
+        row.appendChild(barEl);
+
+        streaksGrid.appendChild(row);
+    });
+
+    // Heatmap (last 28 days)
+    renderHeatmap();
+}
+
+function countTotalActiveDays() {
+    let count = 0;
+    const today = todayStr();
+    for (let i = 0; i < 90; i++) {
+        const dateStr = addDays(today, -i);
+        const data = getHabits(dateStr);
+        if (Object.values(data).some(v => v)) count++;
+    }
+    return count;
+}
+
+function renderHeatmap() {
+    const grid = document.getElementById("heatmap-grid");
+    grid.innerHTML = "";
+    const today = todayStr();
+
+    // Day labels (Mon-Sun)
+    const dayLabels = ["Ma", "Ti", "On", "To", "Fr", "Lø", "Sø"];
+    dayLabels.forEach(label => {
+        const el = document.createElement("div");
+        el.className = "heatmap-day-label";
+        el.textContent = label;
+        grid.appendChild(el);
+    });
+
+    // Find the Monday 4 weeks ago
+    const startDate = addDays(getWeekStart(today), -21);
+
+    for (let i = 0; i < 28; i++) {
+        const dateStr = addDays(startDate, i);
+        const cell = document.createElement("div");
+        cell.className = "heatmap-cell";
+
+        if (daysBetween(dateStr, today) < 0) {
+            // Future date
+            cell.classList.add("future");
+        } else {
+            const data = getHabits(dateStr);
+            const done = HABITS.filter(h => data[h.id]).length;
+            const ratio = done / HABITS.length;
+
+            if (ratio > 0.75) cell.classList.add("level-3");
+            else if (ratio > 0.4) cell.classList.add("level-2");
+            else if (ratio > 0) cell.classList.add("level-1");
+        }
+
+        // Show day number
+        const dayNum = new Date(dateStr + "T12:00:00").getDate();
+        const dateSpan = document.createElement("span");
+        dateSpan.className = "cell-date";
+        dateSpan.textContent = dayNum;
+        cell.appendChild(dateSpan);
+
+        grid.appendChild(cell);
+    }
+}
+
+// ===== AUTOSAVE =====
+let focusSaveTimeout = null;
+let reflectionSaveTimeout = null;
+
+function setupAutosave() {
+    const focusInput = document.getElementById("focus-input");
+    const focusSaved = document.getElementById("focus-saved");
+
+    focusInput.addEventListener("input", () => {
+        clearTimeout(focusSaveTimeout);
+        focusSaveTimeout = setTimeout(() => {
+            setFocus(todayStr(), focusInput.value);
+            flashSaved(focusSaved);
+        }, 500);
+    });
+
+    const reflectionInput = document.getElementById("reflection-input");
+    const reflectionSaved = document.getElementById("reflection-saved");
+
+    reflectionInput.addEventListener("input", () => {
+        clearTimeout(reflectionSaveTimeout);
+        reflectionSaveTimeout = setTimeout(() => {
+            setReflection(todayStr(), reflectionInput.value);
+            flashSaved(reflectionSaved);
+        }, 500);
+    });
+}
+
+function flashSaved(el) {
+    el.classList.add("show");
+    setTimeout(() => el.classList.remove("show"), 1500);
+}
+
+// ===== INIT =====
+function init() {
+    setupAutosave();
+    const initialView = autoDetectView();
+    showView(initialView);
+}
+
+init();
+</script>
+
 </body>
 </html>
