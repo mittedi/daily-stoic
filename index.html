@@ -6,6 +6,9 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#0f0f0f">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
     <title>Daily Stack</title>
     <style>
         /* ===== RESET & BASE ===== */
@@ -403,9 +406,9 @@
 <body>
 
 <nav>
-    <button id="nav-morning" onclick="showView('morning')">Morgen</button>
-    <button id="nav-evening" onclick="showView('evening')">Aften</button>
-    <button id="nav-dashboard" onclick="showView('dashboard')">Dashboard</button>
+    <button id="nav-morning" onclick="showView('morning')" aria-label="Morgen-visning">Morgen</button>
+    <button id="nav-evening" onclick="showView('evening')" aria-label="Aften-visning">Aften</button>
+    <button id="nav-dashboard" onclick="showView('dashboard')" aria-label="Dashboard-visning">Dashboard</button>
 </nav>
 
 <main>
@@ -426,6 +429,7 @@
                 id="focus-input"
                 placeholder="Skriv dit fokus..."
                 autocomplete="off"
+                aria-label="Dagens fokus"
             >
             <p class="saved-indicator" id="focus-saved">Gemt</p>
         </div>
@@ -444,6 +448,7 @@
                 class="reflection-input"
                 id="reflection-input"
                 placeholder="Skriv din refleksion..."
+                aria-label="Dagens refleksion"
             ></textarea>
             <p class="saved-indicator" id="reflection-saved">Gemt</p>
         </div>
@@ -501,6 +506,22 @@ const QUOTES = [
     { text: "Sammenlign dig ikke med andre. Sammenlign dig kun med dig fra i går.", author: "Stoisk princip" },
     { text: "Hvad er under din kontrol i dag? Fokuser kun på det.", author: "Epiktet" },
     { text: "Enkelthed er styrke. Fjern alt der ikke tjener dit formål.", author: "Stoisk princip" },
+    { text: "Forhindringen er vejen. Det der står i vejen, bliver vejen.", author: "Marcus Aurelius" },
+    { text: "Vær tolerant over for andre og streng mod dig selv.", author: "Marcus Aurelius" },
+    { text: "Lykke er ikke noget der sker for dig. Det er noget du skaber gennem dine handlinger.", author: "Epiktet" },
+    { text: "Den bedste hævn er ikke at ligne din fjende.", author: "Marcus Aurelius" },
+    { text: "Det er ikke døden en mand skal frygte, men han bør frygte aldrig at begynde at leve.", author: "Marcus Aurelius" },
+    { text: "Bær ikke over med hvad skæbnen bringer — brug det.", author: "Seneca" },
+    { text: "Vis mig én der ikke er slave. Én er slave af begær, en anden af grådighed, en tredje af ambition.", author: "Seneca" },
+    { text: "Svært er det der gør dig stærkere. Undgå ikke modstand — søg den.", author: "Stoisk princip" },
+    { text: "Nøglen til lykke er lave forventninger og høj indsats.", author: "Stoisk princip" },
+    { text: "Du bliver hvad du gentager. Vælg dine vaner med omhu.", author: "Stoisk princip" },
+    { text: "Tiden er din mest begrænsede ressource. Brug den som om den er det.", author: "Seneca" },
+    { text: "At leve er ikke bare at trække vejret. Det er at handle.", author: "Seneca" },
+    { text: "Ingen kan tage din vilje fra dig. Alt andet er til låns.", author: "Epiktet" },
+    { text: "Hold op med at vente. Det rigtige tidspunkt er nu.", author: "Stoisk princip" },
+    { text: "Amor fati: elsk din skæbne, også det svære.", author: "Nietzsche / Stoisk princip" },
+    { text: "Disciplin er frihed. Uden rutiner styrer tilfældighederne din dag.", author: "Stoisk princip" },
 ];
 
 // ===== DATE HELPERS =====
@@ -672,7 +693,7 @@ function autoDetectView() {
     const hour = new Date().getHours();
     if (hour < 12) return "morning";
     if (hour >= 17) return "evening";
-    return "morning"; // Default to morning between 12-17
+    return "dashboard"; // Between 12-17: show progress overview
 }
 
 // ===== RENDER: MORNING =====
@@ -701,7 +722,14 @@ function renderEvening() {
     HABITS.forEach(habit => {
         const li = document.createElement("li");
         li.className = "habit-item" + (habitsData[habit.id] ? " done" : "");
+        li.setAttribute("role", "checkbox");
+        li.setAttribute("aria-checked", habitsData[habit.id] ? "true" : "false");
+        li.setAttribute("aria-label", habit.name);
+        li.setAttribute("tabindex", "0");
         li.onclick = () => toggleHabit(habit.id);
+        li.addEventListener("keydown", (e) => {
+            if (e.key === " " || e.key === "Enter") { e.preventDefault(); toggleHabit(habit.id); }
+        });
 
         const checkDiv = document.createElement("div");
         checkDiv.className = "habit-check";
@@ -905,6 +933,10 @@ function init() {
     setupAutosave();
     const initialView = autoDetectView();
     showView(initialView);
+
+    if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.register("sw.js").catch(err => console.warn("SW:", err));
+    }
 }
 
 init();
