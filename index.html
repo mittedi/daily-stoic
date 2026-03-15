@@ -409,6 +409,281 @@
             border-radius: 2px;
         }
 
+        /* ===== SETTINGS VIEW ===== */
+        .settings-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .settings-habit-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            gap: 10px;
+        }
+
+        .settings-habit-item .habit-name {
+            flex: 1;
+            font-size: 0.9rem;
+        }
+
+        .settings-habit-item .habit-type-badge {
+            font-family: var(--mono);
+            font-size: 0.6rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 2px 6px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+        }
+
+        .settings-habit-item .delete-btn {
+            background: none;
+            border: 1px solid var(--red-dim);
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            padding: 4px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: color 0.2s, border-color 0.2s;
+        }
+
+        .settings-habit-item .delete-btn:active {
+            color: #c66;
+            border-color: #c66;
+        }
+
+        .add-habit-form {
+            margin-top: 16px;
+            padding: 16px;
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .add-habit-form input,
+        .add-habit-form select {
+            padding: 10px 12px;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            color: var(--text);
+            font-family: var(--sans);
+            font-size: 0.9rem;
+            outline: none;
+        }
+
+        .add-habit-form input:focus,
+        .add-habit-form select:focus {
+            border-color: var(--amber-dim);
+        }
+
+        .add-habit-form .form-row {
+            display: flex;
+            gap: 8px;
+        }
+
+        .add-habit-form .form-row select {
+            flex: 1;
+        }
+
+        .add-habit-form .form-row input[type="number"] {
+            width: 70px;
+        }
+
+        .add-habit-btn {
+            padding: 10px 16px;
+            background: var(--amber-dim);
+            border: none;
+            border-radius: var(--radius);
+            color: var(--text);
+            font-family: var(--mono);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .add-habit-btn:active {
+            background: var(--amber);
+        }
+
+        /* ===== REVIEW VIEW ===== */
+        .review-toggle {
+            display: flex;
+            gap: 2px;
+            margin-bottom: 20px;
+        }
+
+        .review-toggle button {
+            flex: 1;
+            padding: 10px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            font-family: var(--mono);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            cursor: pointer;
+            border-radius: var(--radius);
+            transition: color 0.2s, border-color 0.2s;
+        }
+
+        .review-toggle button.active {
+            color: var(--amber);
+            border-color: var(--amber-dim);
+        }
+
+        .review-week-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2px;
+        }
+
+        .review-day-row {
+            display: flex;
+            align-items: center;
+            padding: 10px 16px;
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            gap: 12px;
+        }
+
+        .review-day-label {
+            font-family: var(--mono);
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            min-width: 30px;
+            text-transform: uppercase;
+        }
+
+        .review-day-dots {
+            display: flex;
+            gap: 4px;
+            flex: 1;
+        }
+
+        .review-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--border);
+        }
+
+        .review-dot.filled {
+            background: var(--green);
+        }
+
+        .review-day-count {
+            font-family: var(--mono);
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            min-width: 30px;
+            text-align: right;
+        }
+
+        .review-entries {
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .review-entry {
+            padding: 12px 16px;
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            border-left: 3px solid var(--amber-dim);
+        }
+
+        .review-entry-date {
+            font-family: var(--mono);
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 4px;
+        }
+
+        .review-entry-text {
+            font-size: 0.9rem;
+            color: var(--text);
+            line-height: 1.5;
+        }
+
+        .review-month-habit {
+            display: flex;
+            align-items: center;
+            padding: 10px 16px;
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            gap: 12px;
+        }
+
+        .review-month-habit .habit-name {
+            flex: 1;
+            font-size: 0.85rem;
+        }
+
+        .review-rate-bar {
+            width: 60px;
+            height: 6px;
+            background: var(--border);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .review-rate-fill {
+            height: 100%;
+            background: var(--green);
+            border-radius: 3px;
+            transition: width 0.3s;
+        }
+
+        .review-rate-pct {
+            font-family: var(--mono);
+            font-size: 0.75rem;
+            color: var(--amber);
+            min-width: 40px;
+            text-align: right;
+        }
+
+        .review-month-nav {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .review-month-nav button {
+            background: none;
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            font-family: var(--mono);
+            font-size: 0.85rem;
+            padding: 6px 12px;
+            border-radius: var(--radius);
+            cursor: pointer;
+        }
+
+        .review-month-nav span {
+            font-family: var(--mono);
+            font-size: 0.8rem;
+            color: var(--text);
+            min-width: 120px;
+            text-align: center;
+        }
+
         /* ===== UTILITIES ===== */
         .saved-indicator {
             font-family: var(--mono);
@@ -457,6 +732,8 @@
     <button id="nav-morning" onclick="showView('morning')" aria-label="Morgen-visning">Morgen</button>
     <button id="nav-evening" onclick="showView('evening')" aria-label="Aften-visning">Aften</button>
     <button id="nav-dashboard" onclick="showView('dashboard')" aria-label="Dashboard-visning">Dashboard</button>
+    <button id="nav-review" onclick="showView('review')" aria-label="Review-visning">Review</button>
+    <button id="nav-settings" onclick="showView('settings')" aria-label="Indstillinger">&#9881;</button>
 </nav>
 
 <div class="date-nav" id="date-nav">
@@ -553,53 +830,64 @@
             </div>
         </div>
     </div>
+
+    <!-- ===== REVIEW VIEW ===== -->
+    <div id="view-review" class="view">
+        <div class="review-toggle">
+            <button id="review-week-btn" class="active" onclick="showReviewMode('week')">Uge</button>
+            <button id="review-month-btn" onclick="showReviewMode('month')">Måned</button>
+        </div>
+
+        <div id="review-week-content">
+            <div class="review-month-nav">
+                <button onclick="changeReviewWeek(-1)">&#8592;</button>
+                <span id="review-week-label"></span>
+                <button onclick="changeReviewWeek(1)">&#8594;</button>
+            </div>
+            <p class="section-label">Vaner per dag</p>
+            <div class="review-week-grid" id="review-week-grid"></div>
+            <div class="review-entries" id="review-week-entries"></div>
+        </div>
+
+        <div id="review-month-content" style="display:none;">
+            <div class="review-month-nav">
+                <button onclick="changeReviewMonth(-1)">&#8592;</button>
+                <span id="review-month-label"></span>
+                <button onclick="changeReviewMonth(1)">&#8594;</button>
+            </div>
+            <div class="summary-card" id="review-month-summary"></div>
+            <p class="section-label">Gennemførselsrate per vane</p>
+            <div id="review-month-habits" style="display:flex;flex-direction:column;gap:2px;"></div>
+        </div>
+    </div>
+
+    <!-- ===== SETTINGS VIEW ===== -->
+    <div id="view-settings" class="view">
+        <p class="section-label">Mine vaner</p>
+        <ul class="settings-list" id="settings-habits-list"></ul>
+
+        <div class="add-habit-form" id="add-habit-form">
+            <p class="section-label">Tilføj ny vane</p>
+            <input type="text" id="new-habit-name" placeholder="Vanenavn..." autocomplete="off">
+            <div class="form-row">
+                <select id="new-habit-type">
+                    <option value="daily">Daglig</option>
+                    <option value="weekly">Ugentlig</option>
+                </select>
+                <input type="number" id="new-habit-goal" min="1" max="7" value="1" placeholder="Mål">
+            </div>
+            <button class="add-habit-btn" onclick="addNewHabit()">Tilføj vane</button>
+        </div>
+    </div>
 </main>
 
+<script src="quotes.js"></script>
 <script>
 // ===== CONFIG =====
-const HABITS = [
-    { id: "walk",       name: "Gå dagligt",             type: "daily" },
-    { id: "run",        name: "Løb",                    type: "weekly", goal: 3 },
-    { id: "strength",   name: "Styrketræning",          type: "weekly", goal: 3 },
-    { id: "eggs",       name: "2 æg",                   type: "daily" },
-    { id: "sauerkraut", name: "Surkål",                 type: "daily" },
-    { id: "no_sugar",   name: "Ingen sukker",           type: "daily" },
-    { id: "meditation", name: "Meditation 15 min",      type: "daily" },
-    { id: "bed_early",  name: "I seng 20:00–20:30",     type: "daily" },
-];
+// HABITS loaded dynamically from API — see loadHabitsConfig()
+let HABITS = [];
 
-const QUOTES = [
-    { text: "Du har magt over dit sind, ikke over ydre begivenheder. Erkend dette og du vil finde styrke.", author: "Marcus Aurelius" },
-    { text: "Mist ikke tid på det du ikke kan kontrollere. Fokuser på det du kan.", author: "Epiktet" },
-    { text: "Vi lider mere i forestillingen end i virkeligheden.", author: "Seneca" },
-    { text: "Lev hver dag som om det kunne være dit sidste — og en dag vil du have ret.", author: "Marcus Aurelius" },
-    { text: "Fremgang, ikke perfektion.", author: "Stoisk princip" },
-    { text: "Negativt visualisér: hvad ville du miste, hvis du mistede det du har nu?", author: "Irvine" },
-    { text: "Det er ikke tingene der forstyrrer os, men vores mening om tingene.", author: "Epiktet" },
-    { text: "Hvad er det værste der kan ske? Og kan du overleve det?", author: "Irvine" },
-    { text: "Øv frivillig ubehag. Vælg det svære i dag.", author: "Stoisk princip" },
-    { text: "Din karakter er summen af dine valg.", author: "Epiktet" },
-    { text: "Memento mori: du er dødelig. Hvad betyder det for din dag?", author: "Stoisk princip" },
-    { text: "Sammenlign dig ikke med andre. Sammenlign dig kun med dig fra i går.", author: "Stoisk princip" },
-    { text: "Hvad er under din kontrol i dag? Fokuser kun på det.", author: "Epiktet" },
-    { text: "Enkelthed er styrke. Fjern alt der ikke tjener dit formål.", author: "Stoisk princip" },
-    { text: "Forhindringen er vejen. Det der står i vejen, bliver vejen.", author: "Marcus Aurelius" },
-    { text: "Vær tolerant over for andre og streng mod dig selv.", author: "Marcus Aurelius" },
-    { text: "Lykke er ikke noget der sker for dig. Det er noget du skaber gennem dine handlinger.", author: "Epiktet" },
-    { text: "Den bedste hævn er ikke at ligne din fjende.", author: "Marcus Aurelius" },
-    { text: "Det er ikke døden en mand skal frygte, men han bør frygte aldrig at begynde at leve.", author: "Marcus Aurelius" },
-    { text: "Bær ikke over med hvad skæbnen bringer — brug det.", author: "Seneca" },
-    { text: "Vis mig én der ikke er slave. Én er slave af begær, en anden af grådighed, en tredje af ambition.", author: "Seneca" },
-    { text: "Svært er det der gør dig stærkere. Undgå ikke modstand — søg den.", author: "Stoisk princip" },
-    { text: "Nøglen til lykke er lave forventninger og høj indsats.", author: "Stoisk princip" },
-    { text: "Du bliver hvad du gentager. Vælg dine vaner med omhu.", author: "Stoisk princip" },
-    { text: "Tiden er din mest begrænsede ressource. Brug den som om den er det.", author: "Seneca" },
-    { text: "At leve er ikke bare at trække vejret. Det er at handle.", author: "Seneca" },
-    { text: "Ingen kan tage din vilje fra dig. Alt andet er til låns.", author: "Epiktet" },
-    { text: "Hold op med at vente. Det rigtige tidspunkt er nu.", author: "Stoisk princip" },
-    { text: "Amor fati: elsk din skæbne, også det svære.", author: "Nietzsche / Stoisk princip" },
-    { text: "Disciplin er frihed. Uden rutiner styrer tilfældighederne din dag.", author: "Stoisk princip" },
-];
+// QUOTES loaded from quotes.js via script tag
 
 // ===== DATE HELPERS =====
 function todayStr() {
@@ -838,9 +1126,38 @@ function getQuoteForDate(dateStr) {
     return QUOTES[index];
 }
 
+// ===== HABITS CONFIG =====
+async function loadHabitsConfig() {
+    try {
+        const res = await fetch("/api/habits-config");
+        if (res.ok) {
+            const data = await res.json();
+            if (data.length > 0) {
+                HABITS = data.map(h => ({id: h.id, name: h.name, type: h.type, goal: h.goal || 1}));
+                return;
+            }
+        }
+    } catch {}
+    // Fallback defaults if API unavailable
+    HABITS = [
+        {id: "walk", name: "Gå dagligt", type: "daily", goal: 1},
+        {id: "run", name: "Løb", type: "weekly", goal: 3},
+        {id: "strength", name: "Styrketræning", type: "weekly", goal: 3},
+        {id: "eggs", name: "2 æg", type: "daily", goal: 1},
+        {id: "sauerkraut", name: "Surkål", type: "daily", goal: 1},
+        {id: "no_sugar", name: "Ingen sukker", type: "daily", goal: 1},
+        {id: "meditation", name: "Meditation 15 min", type: "daily", goal: 1},
+        {id: "bed_early", name: "I seng 20:00–20:30", type: "daily", goal: 1},
+    ];
+}
+
 // ===== VIEW MANAGEMENT =====
 let currentView = "morning";
 let selectedDate = todayStr();
+let reviewWeekStart = getWeekStart(todayStr());
+let reviewYear = new Date().getFullYear();
+let reviewMonth = new Date().getMonth() + 1;
+let reviewMode = "week";
 
 async function changeDate(delta) {
     selectedDate = addDays(selectedDate, delta);
@@ -874,13 +1191,16 @@ function showView(view) {
     document.getElementById(`view-${view}`).classList.add("active");
     document.getElementById(`nav-${view}`).classList.add("active");
 
-    // Hide date-nav on dashboard (already shows date in dash-date)
+    // Hide date-nav on dashboard, review, settings
     const dateNav = document.getElementById("date-nav");
-    dateNav.style.display = view === "dashboard" ? "none" : "flex";
+    const hideDateNav = ["dashboard", "review", "settings"].includes(view);
+    dateNav.style.display = hideDateNav ? "none" : "flex";
 
     if (view === "morning") renderMorning();
     if (view === "evening") renderEvening();
     if (view === "dashboard") renderDashboard();
+    if (view === "review") renderReview();
+    if (view === "settings") renderSettings();
 }
 
 function autoDetectView() {
@@ -1163,8 +1483,217 @@ function flashSaved(el) {
     setTimeout(() => el.classList.remove("show"), 1500);
 }
 
+// ===== RENDER: REVIEW =====
+function renderReview() {
+    if (reviewMode === "week") renderWeeklyReview();
+    else renderMonthlyReview();
+}
+
+function showReviewMode(mode) {
+    reviewMode = mode;
+    document.getElementById("review-week-btn").classList.toggle("active", mode === "week");
+    document.getElementById("review-month-btn").classList.toggle("active", mode === "month");
+    document.getElementById("review-week-content").style.display = mode === "week" ? "block" : "none";
+    document.getElementById("review-month-content").style.display = mode === "month" ? "block" : "none";
+    renderReview();
+}
+
+function changeReviewWeek(delta) {
+    reviewWeekStart = addDays(reviewWeekStart, delta * 7);
+    renderWeeklyReview();
+}
+
+function changeReviewMonth(delta) {
+    reviewMonth += delta;
+    if (reviewMonth > 12) { reviewMonth = 1; reviewYear++; }
+    if (reviewMonth < 1) { reviewMonth = 12; reviewYear--; }
+    renderMonthlyReview();
+}
+
+async function renderWeeklyReview() {
+    const dayNames = ["ma", "ti", "on", "to", "fr", "lø", "sø"];
+    const weekEnd = addDays(reviewWeekStart, 6);
+    document.getElementById("review-week-label").textContent =
+        `${reviewWeekStart.slice(5)} — ${weekEnd.slice(5)}`;
+
+    // Try API first, fall back to localStorage
+    let weekData = null;
+    try {
+        const res = await fetch(`/api/review/weekly/${reviewWeekStart}`);
+        if (res.ok) weekData = await res.json();
+    } catch {}
+
+    const grid = document.getElementById("review-week-grid");
+    grid.innerHTML = "";
+    const entriesDiv = document.getElementById("review-week-entries");
+    entriesDiv.innerHTML = "";
+
+    for (let i = 0; i < 7; i++) {
+        const dateStr = addDays(reviewWeekStart, i);
+        const habitsData = weekData ? (weekData.habits[dateStr] || []) : Object.keys(getHabits(dateStr));
+        const doneCount = Array.isArray(habitsData) ? habitsData.length : Object.keys(habitsData).length;
+
+        const row = document.createElement("div");
+        row.className = "review-day-row";
+
+        const label = document.createElement("span");
+        label.className = "review-day-label";
+        label.textContent = dayNames[i];
+        row.appendChild(label);
+
+        const dots = document.createElement("div");
+        dots.className = "review-day-dots";
+        const habitIds = Array.isArray(habitsData) ? habitsData : [];
+        HABITS.forEach(h => {
+            const dot = document.createElement("div");
+            dot.className = "review-dot" + (habitIds.includes(h.id) || getHabits(dateStr)[h.id] ? " filled" : "");
+            dot.title = h.name;
+            dots.appendChild(dot);
+        });
+        row.appendChild(dots);
+
+        const count = document.createElement("span");
+        count.className = "review-day-count";
+        count.textContent = `${doneCount}/${HABITS.length}`;
+        row.appendChild(count);
+
+        grid.appendChild(row);
+
+        // Focus/reflection entries
+        const focus = weekData?.focus?.[dateStr] || getFocus(dateStr);
+        const refl = weekData?.reflections?.[dateStr] || getReflection(dateStr);
+        const focusText = typeof focus === "string" ? focus : "";
+        const reflText = typeof refl === "string" ? refl : "";
+
+        if (focusText) {
+            const entry = document.createElement("div");
+            entry.className = "review-entry";
+            entry.innerHTML = `<div class="review-entry-date">${dayNames[i]} — fokus</div><div class="review-entry-text">${escapeHtml(focusText)}</div>`;
+            entriesDiv.appendChild(entry);
+        }
+        if (reflText) {
+            const entry = document.createElement("div");
+            entry.className = "review-entry";
+            entry.innerHTML = `<div class="review-entry-date">${dayNames[i]} — refleksion</div><div class="review-entry-text">${escapeHtml(reflText)}</div>`;
+            entriesDiv.appendChild(entry);
+        }
+    }
+}
+
+async function renderMonthlyReview() {
+    const monthNames = ["januar", "februar", "marts", "april", "maj", "juni",
+                        "juli", "august", "september", "oktober", "november", "december"];
+    document.getElementById("review-month-label").textContent =
+        `${monthNames[reviewMonth - 1]} ${reviewYear}`;
+
+    let monthData = null;
+    try {
+        const res = await fetch(`/api/review/monthly/${reviewYear}/${reviewMonth}`);
+        if (res.ok) monthData = await res.json();
+    } catch {}
+
+    // Summary card
+    const summary = document.getElementById("review-month-summary");
+    summary.innerHTML = "";
+    const activeDays = monthData?.total_active_days || 0;
+    const daysInMonth = monthData?.days_in_month || 30;
+    const avgRate = monthData?.completion_rates ?
+        Math.round(Object.values(monthData.completion_rates).reduce((a, b) => a + b, 0) / Math.max(Object.keys(monthData.completion_rates).length, 1) * 100) : 0;
+
+    [{value: activeDays, label: "Aktive dage"}, {value: `${daysInMonth}`, label: "Dage i md."}, {value: `${avgRate}%`, label: "Gns. rate"}].forEach(s => {
+        const div = document.createElement("div");
+        div.className = "summary-stat";
+        div.innerHTML = `<div class="stat-value">${s.value}</div><div class="stat-label">${s.label}</div>`;
+        summary.appendChild(div);
+    });
+
+    // Per-habit rates
+    const habitsDiv = document.getElementById("review-month-habits");
+    habitsDiv.innerHTML = "";
+    HABITS.forEach(h => {
+        const rate = monthData?.completion_rates?.[h.id] || 0;
+        const pct = Math.round(rate * 100);
+        const row = document.createElement("div");
+        row.className = "review-month-habit";
+        row.innerHTML = `
+            <span class="habit-name">${escapeHtml(h.name)}</span>
+            <div class="review-rate-bar"><div class="review-rate-fill" style="width:${pct}%"></div></div>
+            <span class="review-rate-pct">${pct}%</span>`;
+        habitsDiv.appendChild(row);
+    });
+}
+
+function escapeHtml(text) {
+    const div = document.createElement("div");
+    div.textContent = text;
+    return div.innerHTML;
+}
+
+// ===== RENDER: SETTINGS =====
+function renderSettings() {
+    const list = document.getElementById("settings-habits-list");
+    list.innerHTML = "";
+    HABITS.forEach((h, i) => {
+        const li = document.createElement("li");
+        li.className = "settings-habit-item";
+        const nameSpan = document.createElement("span");
+        nameSpan.className = "habit-name";
+        nameSpan.textContent = h.name;
+        li.appendChild(nameSpan);
+
+        const badge = document.createElement("span");
+        badge.className = "habit-type-badge";
+        badge.textContent = h.type === "weekly" ? `ugentlig ×${h.goal}` : "daglig";
+        li.appendChild(badge);
+
+        const delBtn = document.createElement("button");
+        delBtn.className = "delete-btn";
+        delBtn.textContent = "Fjern";
+        delBtn.onclick = (e) => { e.stopPropagation(); deleteHabit(h.id); };
+        li.appendChild(delBtn);
+
+        list.appendChild(li);
+    });
+}
+
+async function addNewHabit() {
+    const nameInput = document.getElementById("new-habit-name");
+    const typeSelect = document.getElementById("new-habit-type");
+    const goalInput = document.getElementById("new-habit-goal");
+    const name = nameInput.value.trim();
+    if (!name) return;
+
+    const id = name.toLowerCase().replace(/[^a-zæøå0-9]/g, "_").replace(/_+/g, "_");
+    const type = typeSelect.value;
+    const goal = type === "weekly" ? parseInt(goalInput.value) || 3 : 1;
+    const position = HABITS.length;
+
+    try {
+        await fetch("/api/habits-config", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({id, name, type, goal, position})
+        });
+    } catch {}
+
+    HABITS.push({id, name, type, goal});
+    nameInput.value = "";
+    goalInput.value = "1";
+    typeSelect.value = "daily";
+    renderSettings();
+}
+
+async function deleteHabit(habitId) {
+    try {
+        await fetch(`/api/habits-config/${habitId}`, {method: "DELETE"});
+    } catch {}
+    HABITS = HABITS.filter(h => h.id !== habitId);
+    renderSettings();
+}
+
 // ===== INIT =====
 async function init() {
+    await loadHabitsConfig();
     updateDateNav();
     setupAutosave();
     const initialView = autoDetectView();
