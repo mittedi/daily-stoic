@@ -597,6 +597,75 @@ function setReflection(dateStr, text) {
     safePut(storageKey(dateStr, "reflection"), text);
 }
 
+// ===== API SYNC =====
+function apiPost(path, body) {
+    fetch(path, {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify(body)
+    }).catch(() => {});
+}
+
+async function syncFromApi() {
+    const today = todayStr();
+    try {
+        const [habitsRes, focusRes, reflectionRes] = await Promise.all([
+            fetch(`/api/habits/${today}`).then(r => r.ok ? r.json() : null).catch(() => null),
+            fetch(`/api/focus/${today}`).then(r => r.ok ? r.json() : null).catch(() => null),
+            fetch(`/api/reflection/${today}`).then(r => r.ok ? r.json() : null).catch(() => null),
+        ]);
+
+        // Merge habits: union of API + localStorage, push local-only back to API
+        const localHabits = getHabits(today);
+        const apiHabits = habitsRes || {};
+        const merged = {...apiHabits, ...localHabits};
+        setHabits(today, merged);
+        for (const [id, done] of Object.entries(merged)) {
+            if (!apiHabits[id]) {
+                apiPost("/api/habits", {date: today, habit_id: id, done: done});
+            }
+        }
+        // Push API-only habits that localStorage didn't have
+        for (const [id, done] of Object.entries(apiHabits)) {
+            if (!localHabits[id]) {
+                // Already merged into localStorage above
+            }
+        }
+
+        // Merge focus: localStorage wins if non-empty, otherwise use API
+        if (focusRes && focusRes.text) {
+            const localFocus = getFocus(today);
+            if (!localFocus) {
+                setFocus(today, focusRes.text);
+            } else if (localFocus) {
+                apiPost("/api/focus", {date: today, text: localFocus});
+            }
+        } else {
+            const localFocus = getFocus(today);
+            if (localFocus) {
+                apiPost("/api/focus", {date: today, text: localFocus});
+            }
+        }
+
+        // Merge reflection: same strategy
+        if (reflectionRes && reflectionRes.text) {
+            const localRefl = getReflection(today);
+            if (!localRefl) {
+                setReflection(today, reflectionRes.text);
+            } else if (localRefl) {
+                apiPost("/api/reflection", {date: today, text: localRefl});
+            }
+        } else {
+            const localRefl = getReflection(today);
+            if (localRefl) {
+                apiPost("/api/reflection", {date: today, text: localRefl});
+            }
+        }
+    } catch {
+        // Offline — localStorage works as fallback
+    }
+}
+
 // ===== STREAK CALCULATION =====
 function calculateStreak(habitId, habit) {
     const today = todayStr();
@@ -763,8 +832,10 @@ function renderEvening() {
 function toggleHabit(habitId) {
     const today = todayStr();
     const data = getHabits(today);
-    if (data[habitId]) { delete data[habitId]; } else { data[habitId] = true; }
+    const done = !data[habitId];
+    if (done) { data[habitId] = true; } else { delete data[habitId]; }
     setHabits(today, data);
+    apiPost("/api/habits", {date: today, habit_id: habitId, done: done});
     renderEvening();
 }
 
@@ -906,7 +977,9 @@ function setupAutosave() {
     focusInput.addEventListener("input", () => {
         clearTimeout(focusSaveTimeout);
         focusSaveTimeout = setTimeout(() => {
-            setFocus(todayStr(), focusInput.value);
+            const today = todayStr();
+            setFocus(today, focusInput.value);
+            apiPost("/api/focus", {date: today, text: focusInput.value});
             flashSaved(focusSaved);
         }, 500);
     });
@@ -917,7 +990,9 @@ function setupAutosave() {
     reflectionInput.addEventListener("input", () => {
         clearTimeout(reflectionSaveTimeout);
         reflectionSaveTimeout = setTimeout(() => {
-            setReflection(todayStr(), reflectionInput.value);
+            const today = todayStr();
+            setReflection(today, reflectionInput.value);
+            apiPost("/api/reflection", {date: today, text: reflectionInput.value});
             flashSaved(reflectionSaved);
         }, 500);
     });
@@ -929,10 +1004,14 @@ function flashSaved(el) {
 }
 
 // ===== INIT =====
-function init() {
+async function init() {
     setupAutosave();
     const initialView = autoDetectView();
     showView(initialView);
+
+    // Sync from API in background, then re-render
+    await syncFromApi();
+    showView(currentView);
 
     if ("serviceWorker" in navigator) {
         navigator.serviceWorker.register("sw.js").catch(err => console.warn("SW:", err));

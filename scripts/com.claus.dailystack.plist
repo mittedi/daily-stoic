@@ -7,9 +7,11 @@
     <string>com.claus.dailystack</string>
     <key>ProgramArguments</key>
     <array>
-        <string>/opt/homebrew/bin/python3</string>
-        <string>-m</string>
-        <string>http.server</string>
+        <string>/Users/clauseduardpetraeus/Github repos/daily-stack/.venv/bin/uvicorn</string>
+        <string>server.app:app</string>
+        <string>--host</string>
+        <string>0.0.0.0</string>
+        <string>--port</string>
         <string>8080</string>
     </array>
     <key>WorkingDirectory</key>
