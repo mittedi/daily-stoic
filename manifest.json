@@ -1,8 +1,8 @@
 {
-  "name": "Daily Stack",
-  "short_name": "DS",
+  "name": "Daily Stoic",
+  "short_name": "Daily Stoic",
   "description": "Personal daily ritual app — Stoic reflections, habit tracking, streaks.",
-  "start_url": "/",
+  "start_url": "/daily-stack/",
   "display": "standalone",
   "background_color": "#0f0f0f",
   "theme_color": "#0f0f0f",
