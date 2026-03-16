@@ -353,55 +353,6 @@
             transition: width 0.3s;
         }
 
-        .heatmap-container { margin-top: 32px; }
-
-        .heatmap-grid {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 3px;
-            margin-top: 8px;
-        }
-
-        .heatmap-day-label {
-            font-family: var(--mono);
-            font-size: 0.6rem;
-            color: var(--text-muted);
-            text-align: center;
-            padding-bottom: 4px;
-        }
-
-        .heatmap-cell {
-            aspect-ratio: 1;
-            border-radius: 3px;
-            background: var(--bg-input);
-            position: relative;
-        }
-
-        .heatmap-cell.level-1 { background: var(--green-dim); }
-        .heatmap-cell.level-2 { background: var(--green); }
-        .heatmap-cell.level-3 { background: #6aaa6a; }
-        .heatmap-cell.future { background: var(--bg); border: 1px solid var(--border); opacity: 0.3; }
-
-        .heatmap-cell .cell-date {
-            position: absolute;
-            bottom: 2px;
-            right: 3px;
-            font-family: var(--mono);
-            font-size: 0.5rem;
-            color: var(--text-muted);
-            opacity: 0.5;
-        }
-
-        .heatmap-legend {
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-            gap: 4px;
-            margin-top: 8px;
-            font-family: var(--mono);
-            font-size: 0.6rem;
-            color: var(--text-muted);
-        }
 
         .legend-cell {
             width: 12px;
@@ -729,10 +680,7 @@
 <body>
 
 <nav>
-    <button id="nav-morning" onclick="showView('morning')" aria-label="Morgen-visning">Morgen</button>
-    <button id="nav-evening" onclick="showView('evening')" aria-label="Aften-visning">Aften</button>
-    <button id="nav-dashboard" onclick="showView('dashboard')" aria-label="Dashboard-visning">Dashboard</button>
-    <button id="nav-review" onclick="showView('review')" aria-label="Review-visning">Review</button>
+    <button id="nav-main" onclick="showView('main')" aria-label="Daglig visning">I dag</button>
     <button id="nav-settings" onclick="showView('settings')" aria-label="Indstillinger">&#9881;</button>
 </nav>
 
@@ -744,9 +692,9 @@
 </div>
 
 <main>
-    <!-- ===== MORNING VIEW ===== -->
-    <div id="view-morning" class="view">
-        <p class="date-label" id="morning-date"></p>
+    <!-- ===== MAIN VIEW ===== -->
+    <div id="view-main" class="view">
+        <p class="date-label" id="main-date"></p>
 
         <div class="quote-block">
             <p class="quote-text" id="quote-text"></p>
@@ -754,110 +702,24 @@
         </div>
 
         <div class="section-gap">
-            <p class="section-label">Hvad er mit fokus i dag?</p>
-            <input
-                type="text"
-                class="focus-input"
-                id="focus-input"
-                placeholder="Skriv dit fokus..."
-                autocomplete="off"
-                aria-label="Dagens fokus"
-            >
-            <p class="saved-indicator" id="focus-saved">Gemt</p>
+            <p class="section-label">Dagens mål</p>
+            <ul class="habits-list" id="habits-list"></ul>
         </div>
 
         <div class="section-gap">
-            <p class="section-label">Min tanke</p>
-            <textarea
-                class="reflection-input"
-                id="journal-morning-input"
-                placeholder="Skriv din tanke..."
-                aria-label="Morgen journal"
-            ></textarea>
-            <p class="saved-indicator" id="journal-morning-saved">Gemt</p>
+            <p class="section-label">Streaks</p>
+            <div class="streaks-grid" id="streaks-grid"></div>
         </div>
-    </div>
-
-    <!-- ===== EVENING VIEW ===== -->
-    <div id="view-evening" class="view">
-        <p class="date-label" id="evening-date"></p>
-
-        <p class="section-label">Dagens vaner</p>
-        <ul class="habits-list" id="habits-list"></ul>
 
         <div class="section-gap">
-            <p class="section-label">Hvad gik godt i dag?</p>
+            <p class="section-label">Refleksioner for dagen</p>
             <textarea
                 class="reflection-input"
                 id="reflection-input"
-                placeholder="Skriv din refleksion..."
-                aria-label="Dagens refleksion"
+                placeholder="Skriv dine tanker..."
+                aria-label="Refleksioner for dagen"
             ></textarea>
             <p class="saved-indicator" id="reflection-saved">Gemt</p>
-        </div>
-
-        <div class="section-gap">
-            <p class="section-label">Min tanke</p>
-            <textarea
-                class="reflection-input"
-                id="journal-evening-input"
-                placeholder="Skriv din tanke..."
-                aria-label="Aften journal"
-            ></textarea>
-            <p class="saved-indicator" id="journal-evening-saved">Gemt</p>
-        </div>
-    </div>
-
-    <!-- ===== DASHBOARD VIEW ===== -->
-    <div id="view-dashboard" class="view">
-        <p class="date-label" id="dash-date"></p>
-
-        <div class="summary-card" id="summary-card"></div>
-
-        <p class="section-label">Streaks</p>
-        <div class="streaks-grid" id="streaks-grid"></div>
-
-        <div class="heatmap-container">
-            <p class="section-label">Sidste 4 uger</p>
-            <div class="heatmap-grid" id="heatmap-grid"></div>
-            <div class="heatmap-legend">
-                <span>Mindre</span>
-                <div class="legend-cell" style="background: var(--bg-input)"></div>
-                <div class="legend-cell" style="background: var(--green-dim)"></div>
-                <div class="legend-cell" style="background: var(--green)"></div>
-                <div class="legend-cell" style="background: #6aaa6a"></div>
-                <span>Mere</span>
-            </div>
-        </div>
-    </div>
-
-    <!-- ===== REVIEW VIEW ===== -->
-    <div id="view-review" class="view">
-        <div class="review-toggle">
-            <button id="review-week-btn" class="active" onclick="showReviewMode('week')">Uge</button>
-            <button id="review-month-btn" onclick="showReviewMode('month')">Måned</button>
-        </div>
-
-        <div id="review-week-content">
-            <div class="review-month-nav">
-                <button onclick="changeReviewWeek(-1)">&#8592;</button>
-                <span id="review-week-label"></span>
-                <button onclick="changeReviewWeek(1)">&#8594;</button>
-            </div>
-            <p class="section-label">Vaner per dag</p>
-            <div class="review-week-grid" id="review-week-grid"></div>
-            <div class="review-entries" id="review-week-entries"></div>
-        </div>
-
-        <div id="review-month-content" style="display:none;">
-            <div class="review-month-nav">
-                <button onclick="changeReviewMonth(-1)">&#8592;</button>
-                <span id="review-month-label"></span>
-                <button onclick="changeReviewMonth(1)">&#8594;</button>
-            </div>
-            <div class="summary-card" id="review-month-summary"></div>
-            <p class="section-label">Gennemførselsrate per vane</p>
-            <div id="review-month-habits" style="display:flex;flex-direction:column;gap:2px;"></div>
         </div>
     </div>
 
@@ -946,28 +808,12 @@ function setHabits(dateStr, habits) {
     safePut(storageKey(dateStr, "habits"), JSON.stringify(habits));
 }
 
-function getFocus(dateStr) {
-    return localStorage.getItem(storageKey(dateStr, "focus")) || "";
-}
-
-function setFocus(dateStr, text) {
-    safePut(storageKey(dateStr, "focus"), text);
-}
-
 function getReflection(dateStr) {
     return localStorage.getItem(storageKey(dateStr, "reflection")) || "";
 }
 
 function setReflection(dateStr, text) {
     safePut(storageKey(dateStr, "reflection"), text);
-}
-
-function getJournal(dateStr, period) {
-    return localStorage.getItem(storageKey(dateStr, `journal_${period}`)) || "";
-}
-
-function setJournal(dateStr, period, text) {
-    safePut(storageKey(dateStr, `journal_${period}`), text);
 }
 
 // ===== API SYNC =====
@@ -981,11 +827,9 @@ function apiPost(path, body) {
 
 async function syncDateFromApi(dateStr) {
     try {
-        const [habitsRes, focusRes, reflectionRes, journalRes] = await Promise.all([
+        const [habitsRes, reflectionRes] = await Promise.all([
             fetch(`/api/habits/${dateStr}`).then(r => r.ok ? r.json() : null).catch(() => null),
-            fetch(`/api/focus/${dateStr}`).then(r => r.ok ? r.json() : null).catch(() => null),
             fetch(`/api/reflection/${dateStr}`).then(r => r.ok ? r.json() : null).catch(() => null),
-            fetch(`/api/journal/${dateStr}`).then(r => r.ok ? r.json() : null).catch(() => null),
         ]);
 
         // Merge habits
@@ -999,22 +843,7 @@ async function syncDateFromApi(dateStr) {
             }
         }
 
-        // Merge focus: localStorage wins if non-empty
-        if (focusRes && focusRes.text) {
-            const localFocus = getFocus(dateStr);
-            if (!localFocus) {
-                setFocus(dateStr, focusRes.text);
-            } else {
-                apiPost("/api/focus", {date: dateStr, text: localFocus});
-            }
-        } else {
-            const localFocus = getFocus(dateStr);
-            if (localFocus) {
-                apiPost("/api/focus", {date: dateStr, text: localFocus});
-            }
-        }
-
-        // Merge reflection: same strategy
+        // Merge reflection
         if (reflectionRes && reflectionRes.text) {
             const localRefl = getReflection(dateStr);
             if (!localRefl) {
@@ -1026,19 +855,6 @@ async function syncDateFromApi(dateStr) {
             const localRefl = getReflection(dateStr);
             if (localRefl) {
                 apiPost("/api/reflection", {date: dateStr, text: localRefl});
-            }
-        }
-
-        // Merge journal: same strategy for morning and evening
-        if (journalRes) {
-            for (const period of ["morning", "evening"]) {
-                const apiText = journalRes[period]?.text || "";
-                const localText = getJournal(dateStr, period);
-                if (apiText && !localText) {
-                    setJournal(dateStr, period, apiText);
-                } else if (localText) {
-                    apiPost("/api/journal", {date: dateStr, period: period, text: localText});
-                }
             }
         }
     } catch {
@@ -1140,24 +956,16 @@ async function loadHabitsConfig() {
     } catch {}
     // Fallback defaults if API unavailable
     HABITS = [
-        {id: "walk", name: "Gå dagligt", type: "daily", goal: 1},
-        {id: "run", name: "Løb", type: "weekly", goal: 3},
-        {id: "strength", name: "Styrketræning", type: "weekly", goal: 3},
-        {id: "eggs", name: "2 æg", type: "daily", goal: 1},
-        {id: "sauerkraut", name: "Surkål", type: "daily", goal: 1},
-        {id: "no_sugar", name: "Ingen sukker", type: "daily", goal: 1},
-        {id: "meditation", name: "Meditation 15 min", type: "daily", goal: 1},
-        {id: "bed_early", name: "I seng 20:00–20:30", type: "daily", goal: 1},
+        {id: "intensity", name: "15 min intensitetstræning", type: "daily", goal: 1},
+        {id: "strength", name: "15 min styrkeøvelser", type: "daily", goal: 1},
+        {id: "walk", name: "Gå min. 5 km", type: "daily", goal: 1},
+        {id: "bed_early", name: "I seng inden 21:00", type: "daily", goal: 1},
     ];
 }
 
 // ===== VIEW MANAGEMENT =====
-let currentView = "morning";
+let currentView = "main";
 let selectedDate = todayStr();
-let reviewWeekStart = getWeekStart(todayStr());
-let reviewYear = new Date().getFullYear();
-let reviewMonth = new Date().getMonth() + 1;
-let reviewMode = "week";
 
 async function changeDate(delta) {
     selectedDate = addDays(selectedDate, delta);
@@ -1191,52 +999,26 @@ function showView(view) {
     document.getElementById(`view-${view}`).classList.add("active");
     document.getElementById(`nav-${view}`).classList.add("active");
 
-    // Hide date-nav on dashboard, review, settings
     const dateNav = document.getElementById("date-nav");
-    const hideDateNav = ["dashboard", "review", "settings"].includes(view);
-    dateNav.style.display = hideDateNav ? "none" : "flex";
+    dateNav.style.display = view === "settings" ? "none" : "flex";
 
-    if (view === "morning") renderMorning();
-    if (view === "evening") renderEvening();
-    if (view === "dashboard") renderDashboard();
-    if (view === "review") renderReview();
+    if (view === "main") renderMain();
     if (view === "settings") renderSettings();
 }
 
-function autoDetectView() {
-    if (selectedDate !== todayStr()) return "morning";
-    const hour = new Date().getHours();
-    if (hour < 12) return "morning";
-    if (hour >= 17) return "evening";
-    return "dashboard";
-}
-
-// ===== RENDER: MORNING =====
-function renderMorning() {
+// ===== RENDER: MAIN =====
+function renderMain() {
     const today = selectedDate;
-    document.getElementById("morning-date").textContent = formatDateDanish(today);
+    document.getElementById("main-date").textContent = formatDateDanish(today);
 
     const quote = getQuoteForDate(today);
     document.getElementById("quote-text").textContent = `\u201C${quote.text}\u201D`;
     document.getElementById("quote-author").textContent = `— ${quote.author}`;
 
-    const focusInput = document.getElementById("focus-input");
-    focusInput.value = getFocus(today);
-
-    const journalMorningInput = document.getElementById("journal-morning-input");
-    journalMorningInput.value = getJournal(today, "morning");
-}
-
-// ===== RENDER: EVENING =====
-function renderEvening() {
-    const today = selectedDate;
-    document.getElementById("evening-date").textContent = formatDateDanish(today);
-
+    // Habits
     const habitsList = document.getElementById("habits-list");
     habitsList.innerHTML = "";
-
     const habitsData = getHabits(today);
-
     HABITS.forEach(habit => {
         const li = document.createElement("li");
         li.className = "habit-item" + (habitsData[habit.id] ? " done" : "");
@@ -1248,37 +1030,47 @@ function renderEvening() {
         li.addEventListener("keydown", (e) => {
             if (e.key === " " || e.key === "Enter") { e.preventDefault(); toggleHabit(habit.id); }
         });
-
         const checkDiv = document.createElement("div");
         checkDiv.className = "habit-check";
         li.appendChild(checkDiv);
-
         const nameSpan = document.createElement("span");
         nameSpan.className = "habit-name";
         nameSpan.textContent = habit.name;
         li.appendChild(nameSpan);
-
-        if (habit.type === "weekly") {
-            const weekStart = getWeekStart(today);
-            const weekCount = countWeeklyCompletions(habit.id, weekStart);
-            const progressDiv = document.createElement("div");
-            progressDiv.className = "weekly-progress";
-            for (let i = 0; i < habit.goal; i++) {
-                const dot = document.createElement("div");
-                dot.className = "weekly-dot" + (i < weekCount ? " filled" : "");
-                progressDiv.appendChild(dot);
-            }
-            li.appendChild(progressDiv);
-        }
-
         habitsList.appendChild(li);
     });
 
+    // Streaks
+    const streaksGrid = document.getElementById("streaks-grid");
+    streaksGrid.innerHTML = "";
+    const maxStreak = Math.max(...HABITS.map(h => calculateStreak(h.id, h)), 1);
+    HABITS.forEach(habit => {
+        const streak = calculateStreak(habit.id, habit);
+        const pct = Math.min((streak / Math.max(maxStreak, 7)) * 100, 100);
+        const unit = streak === 1 ? "dag" : "dage";
+        const row = document.createElement("div");
+        row.className = "streak-row";
+        const nameEl = document.createElement("span");
+        nameEl.className = "streak-name";
+        nameEl.textContent = habit.name;
+        row.appendChild(nameEl);
+        const countEl = document.createElement("span");
+        countEl.className = "streak-count";
+        countEl.textContent = `${streak} ${unit}`;
+        row.appendChild(countEl);
+        const barEl = document.createElement("div");
+        barEl.className = "streak-bar";
+        const fillEl = document.createElement("div");
+        fillEl.className = "streak-bar-fill";
+        fillEl.style.width = `${pct}%`;
+        barEl.appendChild(fillEl);
+        row.appendChild(barEl);
+        streaksGrid.appendChild(row);
+    });
+
+    // Reflection
     const reflectionInput = document.getElementById("reflection-input");
     reflectionInput.value = getReflection(today);
-
-    const journalEveningInput = document.getElementById("journal-evening-input");
-    journalEveningInput.value = getJournal(today, "evening");
 }
 
 function toggleHabit(habitId) {
@@ -1288,154 +1080,15 @@ function toggleHabit(habitId) {
     if (done) { data[habitId] = true; } else { delete data[habitId]; }
     setHabits(today, data);
     apiPost("/api/habits", {date: today, habit_id: habitId, done: done});
-    renderEvening();
+    renderMain();
 }
 
-// ===== RENDER: DASHBOARD =====
-function renderDashboard() {
-    const today = selectedDate;
-    document.getElementById("dash-date").textContent = formatDateDanish(today);
 
-    // Summary card
-    const summaryCard = document.getElementById("summary-card");
-    const todayData = getHabits(today);
-    const todayDone = HABITS.filter(h => todayData[h.id]).length;
-    const longestStreak = Math.max(...HABITS.map(h => calculateStreak(h.id, h)), 0);
-    const totalDays = countTotalActiveDays();
-
-    summaryCard.textContent = "";
-    const stats = [
-        { value: `${todayDone}/${HABITS.length}`, label: "I dag" },
-        { value: `${longestStreak}`, label: "Bedste streak" },
-        { value: `${totalDays}`, label: "Sidste 90 dage" },
-    ];
-    stats.forEach(s => {
-        const div = document.createElement("div");
-        div.className = "summary-stat";
-        const val = document.createElement("div");
-        val.className = "stat-value";
-        val.textContent = s.value;
-        const lbl = document.createElement("div");
-        lbl.className = "stat-label";
-        lbl.textContent = s.label;
-        div.appendChild(val);
-        div.appendChild(lbl);
-        summaryCard.appendChild(div);
-    });
-
-    // Streaks grid
-    const streaksGrid = document.getElementById("streaks-grid");
-    streaksGrid.innerHTML = "";
-    const maxStreak = Math.max(...HABITS.map(h => calculateStreak(h.id, h)), 1);
-
-    HABITS.forEach(habit => {
-        const streak = calculateStreak(habit.id, habit);
-        const pct = Math.min((streak / Math.max(maxStreak, 7)) * 100, 100);
-        const unit = habit.type === "weekly" ? (streak === 1 ? "uge" : "uger") : (streak === 1 ? "dag" : "dage");
-
-        const row = document.createElement("div");
-        row.className = "streak-row";
-
-        const nameEl = document.createElement("span");
-        nameEl.className = "streak-name";
-        nameEl.textContent = habit.name;
-        row.appendChild(nameEl);
-
-        const countEl = document.createElement("span");
-        countEl.className = "streak-count";
-        countEl.textContent = `${streak} ${unit}`;
-        row.appendChild(countEl);
-
-        const barEl = document.createElement("div");
-        barEl.className = "streak-bar";
-        const fillEl = document.createElement("div");
-        fillEl.className = "streak-bar-fill";
-        fillEl.style.width = `${pct}%`;
-        barEl.appendChild(fillEl);
-        row.appendChild(barEl);
-
-        streaksGrid.appendChild(row);
-    });
-
-    // Heatmap (last 28 days)
-    renderHeatmap();
-}
-
-function countTotalActiveDays() {
-    let count = 0;
-    const today = todayStr();
-    for (let i = 0; i < 90; i++) {
-        const dateStr = addDays(today, -i);
-        const data = getHabits(dateStr);
-        if (Object.values(data).some(v => v)) count++;
-    }
-    return count;
-}
-
-function renderHeatmap() {
-    const grid = document.getElementById("heatmap-grid");
-    grid.innerHTML = "";
-    const today = todayStr();
-
-    // Day labels (Mon-Sun)
-    const dayLabels = ["Ma", "Ti", "On", "To", "Fr", "Lø", "Sø"];
-    dayLabels.forEach(label => {
-        const el = document.createElement("div");
-        el.className = "heatmap-day-label";
-        el.textContent = label;
-        grid.appendChild(el);
-    });
-
-    // Find the Monday 4 weeks ago
-    const startDate = addDays(getWeekStart(today), -21);
-
-    for (let i = 0; i < 28; i++) {
-        const dateStr = addDays(startDate, i);
-        const cell = document.createElement("div");
-        cell.className = "heatmap-cell";
-
-        if (daysBetween(dateStr, today) < 0) {
-            // Future date
-            cell.classList.add("future");
-        } else {
-            const data = getHabits(dateStr);
-            const done = HABITS.filter(h => data[h.id]).length;
-            const ratio = done / HABITS.length;
-
-            if (ratio > 0.75) cell.classList.add("level-3");
-            else if (ratio > 0.4) cell.classList.add("level-2");
-            else if (ratio > 0) cell.classList.add("level-1");
-        }
-
-        // Show day number
-        const dayNum = new Date(dateStr + "T12:00:00").getDate();
-        const dateSpan = document.createElement("span");
-        dateSpan.className = "cell-date";
-        dateSpan.textContent = dayNum;
-        cell.appendChild(dateSpan);
-
-        grid.appendChild(cell);
-    }
-}
 
 // ===== AUTOSAVE =====
-let focusSaveTimeout = null;
 let reflectionSaveTimeout = null;
 
 function setupAutosave() {
-    const focusInput = document.getElementById("focus-input");
-    const focusSaved = document.getElementById("focus-saved");
-
-    focusInput.addEventListener("input", () => {
-        clearTimeout(focusSaveTimeout);
-        focusSaveTimeout = setTimeout(() => {
-            const today = selectedDate;
-            setFocus(today, focusInput.value);
-            apiPost("/api/focus", {date: today, text: focusInput.value});
-            flashSaved(focusSaved);
-        }, 500);
-    });
-
     const reflectionInput = document.getElementById("reflection-input");
     const reflectionSaved = document.getElementById("reflection-saved");
 
@@ -1448,34 +1101,6 @@ function setupAutosave() {
             flashSaved(reflectionSaved);
         }, 500);
     });
-
-    const journalMorningInput = document.getElementById("journal-morning-input");
-    const journalMorningSaved = document.getElementById("journal-morning-saved");
-    let journalMorningSaveTimeout = null;
-
-    journalMorningInput.addEventListener("input", () => {
-        clearTimeout(journalMorningSaveTimeout);
-        journalMorningSaveTimeout = setTimeout(() => {
-            const today = selectedDate;
-            setJournal(today, "morning", journalMorningInput.value);
-            apiPost("/api/journal", {date: today, period: "morning", text: journalMorningInput.value});
-            flashSaved(journalMorningSaved);
-        }, 500);
-    });
-
-    const journalEveningInput = document.getElementById("journal-evening-input");
-    const journalEveningSaved = document.getElementById("journal-evening-saved");
-    let journalEveningSaveTimeout = null;
-
-    journalEveningInput.addEventListener("input", () => {
-        clearTimeout(journalEveningSaveTimeout);
-        journalEveningSaveTimeout = setTimeout(() => {
-            const today = selectedDate;
-            setJournal(today, "evening", journalEveningInput.value);
-            apiPost("/api/journal", {date: today, period: "evening", text: journalEveningInput.value});
-            flashSaved(journalEveningSaved);
-        }, 500);
-    });
 }
 
 function flashSaved(el) {
@@ -1483,145 +1108,7 @@ function flashSaved(el) {
     setTimeout(() => el.classList.remove("show"), 1500);
 }
 
-// ===== RENDER: REVIEW =====
-function renderReview() {
-    if (reviewMode === "week") renderWeeklyReview();
-    else renderMonthlyReview();
-}
 
-function showReviewMode(mode) {
-    reviewMode = mode;
-    document.getElementById("review-week-btn").classList.toggle("active", mode === "week");
-    document.getElementById("review-month-btn").classList.toggle("active", mode === "month");
-    document.getElementById("review-week-content").style.display = mode === "week" ? "block" : "none";
-    document.getElementById("review-month-content").style.display = mode === "month" ? "block" : "none";
-    renderReview();
-}
-
-function changeReviewWeek(delta) {
-    reviewWeekStart = addDays(reviewWeekStart, delta * 7);
-    renderWeeklyReview();
-}
-
-function changeReviewMonth(delta) {
-    reviewMonth += delta;
-    if (reviewMonth > 12) { reviewMonth = 1; reviewYear++; }
-    if (reviewMonth < 1) { reviewMonth = 12; reviewYear--; }
-    renderMonthlyReview();
-}
-
-async function renderWeeklyReview() {
-    const dayNames = ["ma", "ti", "on", "to", "fr", "lø", "sø"];
-    const weekEnd = addDays(reviewWeekStart, 6);
-    document.getElementById("review-week-label").textContent =
-        `${reviewWeekStart.slice(5)} — ${weekEnd.slice(5)}`;
-
-    // Try API first, fall back to localStorage
-    let weekData = null;
-    try {
-        const res = await fetch(`/api/review/weekly/${reviewWeekStart}`);
-        if (res.ok) weekData = await res.json();
-    } catch {}
-
-    const grid = document.getElementById("review-week-grid");
-    grid.innerHTML = "";
-    const entriesDiv = document.getElementById("review-week-entries");
-    entriesDiv.innerHTML = "";
-
-    for (let i = 0; i < 7; i++) {
-        const dateStr = addDays(reviewWeekStart, i);
-        const habitsData = weekData ? (weekData.habits[dateStr] || []) : Object.keys(getHabits(dateStr));
-        const doneCount = Array.isArray(habitsData) ? habitsData.length : Object.keys(habitsData).length;
-
-        const row = document.createElement("div");
-        row.className = "review-day-row";
-
-        const label = document.createElement("span");
-        label.className = "review-day-label";
-        label.textContent = dayNames[i];
-        row.appendChild(label);
-
-        const dots = document.createElement("div");
-        dots.className = "review-day-dots";
-        const habitIds = Array.isArray(habitsData) ? habitsData : [];
-        HABITS.forEach(h => {
-            const dot = document.createElement("div");
-            dot.className = "review-dot" + (habitIds.includes(h.id) || getHabits(dateStr)[h.id] ? " filled" : "");
-            dot.title = h.name;
-            dots.appendChild(dot);
-        });
-        row.appendChild(dots);
-
-        const count = document.createElement("span");
-        count.className = "review-day-count";
-        count.textContent = `${doneCount}/${HABITS.length}`;
-        row.appendChild(count);
-
-        grid.appendChild(row);
-
-        // Focus/reflection entries
-        const focus = weekData?.focus?.[dateStr] || getFocus(dateStr);
-        const refl = weekData?.reflections?.[dateStr] || getReflection(dateStr);
-        const focusText = typeof focus === "string" ? focus : "";
-        const reflText = typeof refl === "string" ? refl : "";
-
-        if (focusText) {
-            const entry = document.createElement("div");
-            entry.className = "review-entry";
-            entry.innerHTML = `<div class="review-entry-date">${dayNames[i]} — fokus</div><div class="review-entry-text">${escapeHtml(focusText)}</div>`;
-            entriesDiv.appendChild(entry);
-        }
-        if (reflText) {
-            const entry = document.createElement("div");
-            entry.className = "review-entry";
-            entry.innerHTML = `<div class="review-entry-date">${dayNames[i]} — refleksion</div><div class="review-entry-text">${escapeHtml(reflText)}</div>`;
-            entriesDiv.appendChild(entry);
-        }
-    }
-}
-
-async function renderMonthlyReview() {
-    const monthNames = ["januar", "februar", "marts", "april", "maj", "juni",
-                        "juli", "august", "september", "oktober", "november", "december"];
-    document.getElementById("review-month-label").textContent =
-        `${monthNames[reviewMonth - 1]} ${reviewYear}`;
-
-    let monthData = null;
-    try {
-        const res = await fetch(`/api/review/monthly/${reviewYear}/${reviewMonth}`);
-        if (res.ok) monthData = await res.json();
-    } catch {}
-
-    // Summary card
-    const summary = document.getElementById("review-month-summary");
-    summary.innerHTML = "";
-    const activeDays = monthData?.total_active_days || 0;
-    const daysInMonth = monthData?.days_in_month || 30;
-    const avgRate = monthData?.completion_rates ?
-        Math.round(Object.values(monthData.completion_rates).reduce((a, b) => a + b, 0) / Math.max(Object.keys(monthData.completion_rates).length, 1) * 100) : 0;
-
-    [{value: activeDays, label: "Aktive dage"}, {value: `${daysInMonth}`, label: "Dage i md."}, {value: `${avgRate}%`, label: "Gns. rate"}].forEach(s => {
-        const div = document.createElement("div");
-        div.className = "summary-stat";
-        div.innerHTML = `<div class="stat-value">${s.value}</div><div class="stat-label">${s.label}</div>`;
-        summary.appendChild(div);
-    });
-
-    // Per-habit rates
-    const habitsDiv = document.getElementById("review-month-habits");
-    habitsDiv.innerHTML = "";
-    HABITS.forEach(h => {
-        const rate = monthData?.completion_rates?.[h.id] || 0;
-        const pct = Math.round(rate * 100);
-        const row = document.createElement("div");
-        row.className = "review-month-habit";
-        row.innerHTML = `
-            <span class="habit-name">${escapeHtml(h.name)}</span>
-            <div class="review-rate-bar"><div class="review-rate-fill" style="width:${pct}%"></div></div>
-            <span class="review-rate-pct">${pct}%</span>`;
-        habitsDiv.appendChild(row);
-    });
-}
 
 function escapeHtml(text) {
     const div = document.createElement("div");
@@ -1696,8 +1183,7 @@ async function init() {
     await loadHabitsConfig();
     updateDateNav();
     setupAutosave();
-    const initialView = autoDetectView();
-    showView(initialView);
+    showView("main");
 
     // Sync from API in background, then re-render
     await syncFromApi();
