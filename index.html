@@ -987,6 +987,16 @@ function getQuoteForDate(dateStr) {
 
 // ===== HABITS CONFIG =====
 function loadHabitsConfig() {
+    const HABITS_VERSION = "v2";
+    if (localStorage.getItem("ds_habits_version") !== HABITS_VERSION) {
+        HABITS = [
+            {id: "bed_early", name: "I seng inden kl. 21.00", type: "daily", goal: 1},
+            {id: "achilles", name: "Daglige øvelser til styrkelse af min akillessene", type: "daily", goal: 1},
+        ];
+        localStorage.setItem("ds_habits_config", JSON.stringify(HABITS));
+        localStorage.setItem("ds_habits_version", HABITS_VERSION);
+        return;
+    }
     const raw = localStorage.getItem("ds_habits_config");
     if (raw) {
         try {
@@ -997,7 +1007,6 @@ function loadHabitsConfig() {
             }
         } catch {}
     }
-    // Default habits first time
     HABITS = [
         {id: "bed_early", name: "I seng inden kl. 21.00", type: "daily", goal: 1},
         {id: "achilles", name: "Daglige øvelser til styrkelse af min akillessene", type: "daily", goal: 1},
