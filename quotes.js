@@ -431,11 +431,9 @@ const QUOTES = [
     { text: "Den der fortvivler over begivenheder, er en kujon. Den der glæder sig over dem, er en idiot.", author: "Albert Camus" },
 
     // --- Friedrich Nietzsche ---
-    { text: "Det der ikke slår mig ihjel, gør mig stærkere.", author: "Friedrich Nietzsche" },
     { text: "Du skal blive den du er.", author: "Friedrich Nietzsche" },
     { text: "At vokse er at overskride sig selv — igen og igen.", author: "Friedrich Nietzsche" },
     { text: "Den der har et 'hvorfor', kan klare næsten ethvert 'hvordan'.", author: "Friedrich Nietzsche" },
-    { text: "Uden musik ville livet være en fejltagelse.", author: "Friedrich Nietzsche" },
     { text: "Den der kæmper mod monstre, bør passe på ikke selv at blive et.", author: "Friedrich Nietzsche" },
 
     // --- Ralph Waldo Emerson ---
