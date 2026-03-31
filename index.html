@@ -999,10 +999,8 @@ function loadHabitsConfig() {
     }
     // Default habits first time
     HABITS = [
-        {id: "intensity", name: "15 min intensitetstræning", type: "daily", goal: 1},
-        {id: "strength", name: "15 min styrkeøvelser", type: "daily", goal: 1},
-        {id: "walk", name: "Gå min. 5 km", type: "daily", goal: 1},
-        {id: "bed_early", name: "I seng inden 21:00", type: "daily", goal: 1},
+        {id: "bed_early", name: "I seng inden kl. 21.00", type: "daily", goal: 1},
+        {id: "achilles", name: "Daglige øvelser til styrkelse af min akillessene", type: "daily", goal: 1},
     ];
     localStorage.setItem("ds_habits_config", JSON.stringify(HABITS));
 }
